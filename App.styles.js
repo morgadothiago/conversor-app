@@ -48,4 +48,15 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     gap: 8, // Use gap for spacing between buttons
   },
+  swapArrowContainer: {
+    flexDirection: "row",
+    backgroundColor: colors.inputBackground,
+    paddingHorizontal: 24,
+    paddingVertical: 16,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+
+    marginBottom: 24,
+  },
 })

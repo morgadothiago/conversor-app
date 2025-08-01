@@ -5,12 +5,16 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native"
 import Button from "./src/components/Button"
 import { styles } from "./App.styles"
 
 import { currencies } from "./src/constants/currencies"
+import Input from "./src/components/Input"
+
+import { Ionicons } from "@expo/vector-icons"
 
 export default function App() {
   return (
@@ -41,6 +45,12 @@ export default function App() {
                 />
               ))}
             </View>
+            <Input label={"Valor: "} value={0} onChangeText={() => {}} />
+
+            <TouchableOpacity style={styles.swapArrowContainer}>
+              <Ionicons name="arrow-down" size={18} color="white" />
+              <Ionicons name="arrow-up" size={18} color="white" />
+            </TouchableOpacity>
           </View>
         </View>
       </ScrollView>
