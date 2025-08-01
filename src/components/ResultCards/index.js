@@ -12,12 +12,12 @@ export default function ResultCards({
   const toSymbol = currencies.find((c) => c.code === toCurrency).symbol
 
   return (
-    <View>
-      <Text>Resultado:</Text>
-      <Text>
+    <View style={styles.container}>
+      <Text style={styles.label}>Resultado:</Text>
+      <Text style={styles.amount}>
         {toSymbol} {result}
       </Text>
-      <Text>
+      <Text style={styles.rate}>
         Taxa de cambio 1: {fromCurrency} = {exchangeRate.toFixed(4)}{" "}
         {toCurrency}
       </Text>

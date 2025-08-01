@@ -1,5 +1,6 @@
 import { StatusBar } from "expo-status-bar"
 import {
+  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -29,12 +30,24 @@ export default function App() {
   const [exchangeRate, setExchangeRate] = useState("")
 
   async function fetchExchangeRate() {
-    const data = await exchangteRateApi(fromCurrency)
-    const rate = data.rates[toCurrency]
-    const convertedAmount = convertCurrency(amount, rate)
-    setExchangeRate(rate)
+    try {
+      setLoading(true)
+      const data = await exchangteRateApi(fromCurrency)
+      const rate = data.rates[toCurrency]
+      const convertedAmount = convertCurrency(amount, rate)
+      setExchangeRate(rate)
+      setResult(convertedAmount)
+    } catch (error) {
+      alert("Erro ao buscar taxa de câmbio")
+    } finally {
+      setLoading(false)
+    }
+  }
 
-    setResult(convertedAmount)
+  function handleSwapCurrency() {
+    setFormCurrency(toCurrency)
+    setToCurrent(fromCurrency)
+    setResult("")
   }
 
   return (
@@ -70,7 +83,10 @@ export default function App() {
 
             <Input label={"Valor: "} value={amount} onChangeText={setAmout} />
 
-            <TouchableOpacity style={styles.swapArrowContainer}>
+            <TouchableOpacity
+              style={styles.swapArrowContainer}
+              onPress={handleSwapCurrency}
+            >
               <Ionicons name="arrow-down" size={18} color="white" />
               <Ionicons name="arrow-up" size={18} color="white" />
             </TouchableOpacity>
@@ -90,10 +106,18 @@ export default function App() {
             </View>
           </View>
           <TouchableOpacity
-            style={styles.swapButton}
+            style={[
+              styles.swapButton,
+              (!amount || loading) && styles.convertButtonDisabled,
+            ]}
             onPress={fetchExchangeRate}
+            disabled={!amount || loading}
           >
-            <Text style={styles.swapButtonText}>Converter</Text>
+            {loading ? (
+              <ActivityIndicator color={"white"} />
+            ) : (
+              <Text style={styles.swapButtonText}>Converter</Text>
+            )}
           </TouchableOpacity>
 
           <ResultCards
