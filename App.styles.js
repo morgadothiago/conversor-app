@@ -59,4 +59,20 @@ export const styles = StyleSheet.create({
 
     marginBottom: 24,
   },
+  swapButton: {
+    backgroundColor: colors.primary,
+    paddingHorizontal: 24,
+    paddingVertical: 16,
+    borderRadius: 12,
+    marginBottom: 24,
+  },
+  swapButtonText: {
+    color: "#ffffff",
+    textAlign: "center",
+    fontSize: 18,
+    fontWeight: "600",
+  },
+  convertButtonDisabled: {
+    backgroundColor: colors.disabled,
+  },
 })

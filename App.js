@@ -15,8 +15,28 @@ import { currencies } from "./src/constants/currencies"
 import Input from "./src/components/Input"
 
 import { Ionicons } from "@expo/vector-icons"
+import ResultCards from "./src/components/ResultCards"
+import { exchangteRateApi } from "./src/services/services"
+import { convertCurrency } from "./src/utils/convertCurrency"
+import { useState } from "react"
 
 export default function App() {
+  const [amount, setAmout] = useState("")
+  const [fromCurrency, setFormCurrency] = useState("USD")
+  const [toCurrency, setToCurrent] = useState("BRL")
+  const [result, setResult] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [exchangeRate, setExchangeRate] = useState("")
+
+  async function fetchExchangeRate() {
+    const data = await exchangteRateApi(fromCurrency)
+    const rate = data.rates[toCurrency]
+    const convertedAmount = convertCurrency(amount, rate)
+    setExchangeRate(rate)
+
+    setResult(convertedAmount)
+  }
+
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -42,16 +62,47 @@ export default function App() {
                   key={currency.code}
                   variant="primary"
                   currency={currency}
+                  onPress={() => setFormCurrency(currency.code)}
+                  isSelected={fromCurrency === currency.code}
                 />
               ))}
             </View>
-            <Input label={"Valor: "} value={0} onChangeText={() => {}} />
+
+            <Input label={"Valor: "} value={amount} onChangeText={setAmout} />
 
             <TouchableOpacity style={styles.swapArrowContainer}>
               <Ionicons name="arrow-down" size={18} color="white" />
               <Ionicons name="arrow-up" size={18} color="white" />
             </TouchableOpacity>
+
+            <Text style={styles.label}>Para:</Text>
+
+            <View style={styles.currencyGrid}>
+              {currencies.map((currency) => (
+                <Button
+                  key={currency.code}
+                  variant="secondary"
+                  currency={currency}
+                  onPress={() => setToCurrent(currency.code)}
+                  isSelected={toCurrency === currency.code}
+                />
+              ))}
+            </View>
           </View>
+          <TouchableOpacity
+            style={styles.swapButton}
+            onPress={fetchExchangeRate}
+          >
+            <Text style={styles.swapButtonText}>Converter</Text>
+          </TouchableOpacity>
+
+          <ResultCards
+            exchangeRate={exchangeRate}
+            result={result}
+            fromCurrency={fromCurrency}
+            toCurrency={toCurrency}
+            currencies={currencies}
+          />
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
